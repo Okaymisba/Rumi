@@ -33,24 +33,25 @@ fun Application.configureRouting() {
         post("/api/process") {
             val request = call.receive<RepoRequest>()
             val repoUrl = request.repoUrl
-            val cloneDir = File("Git/Cloned Dir")
+            val cloneDir = File("Git/Cloned Dir").apply { mkdir() }
 
             // For Cloning
             val cloneCommand = listOf("git", "clone" , repoUrl , cloneDir.absolutePath)
 
             val cloneProcessBuilder = ProcessBuilder(cloneCommand)
 
+            cloneProcessBuilder.directory(cloneDir)
+
             cloneProcessBuilder.redirectErrorStream(true)
 
             cloneProcessBuilder.start().waitFor()
 
             // For Counting
-            val counterForGraphCommand = listOf("sh", "-c", "git log --pretty=format:'%H %cd' --date=short --numstat | awk '/^([a-f0-9]{40})/ { commit = $1; date = $2; next } NF == 3 { added += $1; removed += $2 } /^$/ { print commit, date, \"Added lines:\", added, \"Removed lines:\", removed; added = 0; removed = 0; }'")
+            val counterForGraphCommand = listOf("sh" , "-c" , "git log --pretty=format:'%H %cd' --date=short --numstat | awk '/^([a-f0-9]{40})/ { commit = $1; date = $2; next } NF == 3 { added += $1; removed += $2 } /^$/ { print commit, date, \"Added lines:\", added, \"Removed lines:\", removed; added = 0; removed = 0; }'")
 
             val counterForGraphProcessBuilder = ProcessBuilder(counterForGraphCommand)
 
-            val workingDirectory = File("Git/Cloned Dir")
-            counterForGraphProcessBuilder.directory(workingDirectory)
+            counterForGraphProcessBuilder.directory(cloneDir)
 
             counterForGraphProcessBuilder.redirectErrorStream(true)
 
@@ -62,6 +63,8 @@ fun Application.configureRouting() {
                 counterProcess.waitFor()
 
                 val parsedData = parseGitLogOutput(output)
+
+            cloneDir.deleteRecursively()
 
                 val dates = parsedData.first
                 val linesAdded = parsedData.second
@@ -76,7 +79,7 @@ fun Application.configureRouting() {
 
                 call.respond(responseData)
 
-            cloneDir.deleteRecursively()
+
         }
     }
 
