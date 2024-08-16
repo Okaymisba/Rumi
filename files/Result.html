@@ -9,15 +9,18 @@
 </head>
 <body>
 
-<div id="loading" style="display: none;">
-    <div class="spinner"></div>
+<div id="chartContainer" style="width: 80%%; max-width: 800px;">
+    <div id="loading" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    <canvas id="lineChartForAdd" width="80%"></canvas>
+    <canvas id="lineChartForRemove" width="80%"></canvas>
 </div>
 
-<h4>This is the Graph of Added Lines w.r.t. Time</h4>
 
-<canvas id="lineChart" width="300" height="100"></canvas>
+<!-- <canvas id="lineChart" width="300" height="100"></canvas> -->
 
-<script src = "Result.js"></script>
+<script src = "Graphs.js"></script>
 
 </body>
 </html>

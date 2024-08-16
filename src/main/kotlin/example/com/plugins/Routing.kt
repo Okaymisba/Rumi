@@ -17,9 +17,10 @@ import java.io.InputStreamReader
 data class RepoRequest(val repoUrl: String)
 
 @Serializable
-data class CommitData(
-    val labels: List<String>,
-    val values: List<Int>
+data class CommitDataForAdd(
+    val date: List<String>,
+    val linesAdded: List<Int>,
+    val linesRemoved: List<Int>
 )
 
 
@@ -69,13 +70,15 @@ fun Application.configureRouting() {
 
                 val dates = parsedData.first
                 val linesAdded = parsedData.second
+                val linesRemoved = parsedData.third
 
                 println(dates)
                 println(linesAdded)
 
-                val responseData = CommitData(
-                    labels = dates ,
-                    values = linesAdded
+                val responseData = CommitDataForAdd(
+                    date = dates ,
+                    linesAdded = linesAdded,
+                    linesRemoved = linesRemoved
                 )
 
                 call.respond(responseData)
