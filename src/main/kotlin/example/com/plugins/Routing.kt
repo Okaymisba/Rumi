@@ -1,5 +1,6 @@
 package example.com.plugins
 
+import example.com.countLinesInProject
 import example.com.parseGitLogOutput
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -17,10 +18,12 @@ import java.io.InputStreamReader
 data class RepoRequest(val repoUrl: String)
 
 @Serializable
-data class CommitDataForAdd(
+data class CommitData(
     val date: List<String>,
     val linesAdded: List<Int>,
-    val linesRemoved: List<Int>
+    val linesRemoved: List<Int>,
+    val totalLines: Int,
+    val extensionLineCounts: Map<String, Int>
 )
 
 
@@ -32,7 +35,7 @@ fun Application.configureRouting() {
     }
     routing {
          staticFiles("/", File("files"))
-        post("/api/process") {
+        post("/lineCounter") {
             val request = call.receive<RepoRequest>()
             val repoUrl = request.repoUrl
             val cloneDir = File("Git/Cloned Dir").apply { mkdir() }
@@ -66,6 +69,9 @@ fun Application.configureRouting() {
 
                 val parsedData = parseGitLogOutput(output)
 
+            val (totalLines, extensionLineCounts) = countLinesInProject(cloneDir)
+
+
             cloneDir.deleteRecursively()
 
                 val dates = parsedData.first
@@ -74,11 +80,15 @@ fun Application.configureRouting() {
 
                 println(dates)
                 println(linesAdded)
+            println(totalLines)
+            println(extensionLineCounts)
 
-                val responseData = CommitDataForAdd(
+                val responseData = CommitData(
                     date = dates ,
                     linesAdded = linesAdded,
-                    linesRemoved = linesRemoved
+                    linesRemoved = linesRemoved,
+                    totalLines = totalLines,
+                    extensionLineCounts = extensionLineCounts
                 )
 
                 call.respond(responseData)
