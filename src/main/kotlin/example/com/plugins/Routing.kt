@@ -77,12 +77,6 @@ fun Application.configureRouting() {
                 val dates = parsedData.first
                 val linesAdded = parsedData.second
                 val linesRemoved = parsedData.third
-
-                println(dates)
-                println(linesAdded)
-            println(totalLines)
-            println(extensionLineCounts)
-
                 val responseData = CommitData(
                     date = dates ,
                     linesAdded = linesAdded,
