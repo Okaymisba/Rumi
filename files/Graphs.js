@@ -113,8 +113,8 @@ const urlParams = new URLSearchParams(window.location.search);
           <table>
             <thead>
               <tr>
-                <th>Extensions</th>
-                <th>Number Of Lines</th>
+                <th><strong>Extension</strong></th>
+                <th><strong>Number Of Lines</strong></th>
               </tr>
             </thead>
             <tbody>
@@ -131,8 +131,8 @@ const urlParams = new URLSearchParams(window.location.search);
 
             html += `
             <tr>
-              <td><strong>Total Lines</strong></td>
-              <td>${data.totalLines}</td>
+              <td style = "background-color: #333; color: white;"><strong>Total Lines</strong></td>
+              <td style = "background-color: #333; color: white;"><strong></strong>${data.totalLines}</td>
             </tr>
           </tbody>
         </table>
