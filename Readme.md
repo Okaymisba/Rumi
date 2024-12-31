@@ -34,7 +34,7 @@ If Docker is installed, it will display the version of Docker that is installed.
     After pulling the image, you can run the container using the following command:
 
     ```bash
-    docker run -d -p 8080:8080 okaymisba/rumi:Rumi
+    docker run -p 8080:8080 okaymisba/rumi:Rumi
     ```
     This command runs the container in the background and maps port 8080 of the container to port 8080 on your host.
 
